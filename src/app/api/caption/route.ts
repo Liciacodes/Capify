@@ -7,7 +7,7 @@ export async function POST(req: NextRequest) {
   try {
     const { image, prompt } = await req.json();
 
-    // Extract base64 data and mime type
+    
     const [header, base64Data] = image.split(',');
     const mimeType = header.match(/data:([^;]+)/)?.[1] || 'image/jpeg';
 
@@ -27,8 +27,13 @@ export async function POST(req: NextRequest) {
     const caption = response.text();
 
     return NextResponse.json({ caption });
-  } catch (error: any) {
-    console.error('Caption API error:', error);
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      console.error('Caption API error:', error.message, error.stack);
+    } else {
+      console.error('Caption API error:', error);
+    }
+
     return NextResponse.json(
       { error: 'Failed to generate caption' },
       { status: 500 }
