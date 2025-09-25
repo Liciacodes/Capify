@@ -42,8 +42,8 @@ export default function ImageCaptionGenerator() {
       const parseCaption = (text: string) => {
         if (!text) return [""];
 
-        // remove obvious UI tokens anywhere in the text first
-        let normalized = text.replace(/📋\s*Copy/gi, "").replace(/💬\s*Share/gi, "");
+  // remove obvious UI tokens anywhere in the text first
+  const normalized = text.replace(/📋\s*Copy/gi, "").replace(/💬\s*Share/gi, "");
 
         const cleanOption = (s: string) => {
           return s

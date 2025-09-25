@@ -1,10 +1,7 @@
 import { GoogleGenerativeAI } from '@google/generative-ai';
 import { NextRequest, NextResponse } from 'next/server';
 
-// Lazy initialization: do NOT create a client at module load time so the
-// app can build/deploy even when secrets are not configured. The POST
-// handler will initialize the client when needed and return a 503 if it's
-// not configured.
+
 let genAI: GoogleGenerativeAI | null = null;
 function getGenAI(): GoogleGenerativeAI | null {
   if (genAI) return genAI;
@@ -12,8 +9,7 @@ function getGenAI(): GoogleGenerativeAI | null {
     genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
     return genAI;
   }
-  // If you want to support service-account JSON via GOOGLE_SERVICE_ACCOUNT_BASE64,
-  // implement that initialization here according to the SDK docs.
+
   return null;
 }
 
@@ -21,8 +17,15 @@ export async function POST(req: NextRequest) {
   try {
     const { image, prompt } = await req.json();
 
+  
     const gen = getGenAI();
     if (!gen) {
+      if (process.env.MOCK_CAPTION === 'true') {
+
+        const mocked = `Playful vibes: Sun-kissed moments and good energy. \n\nSmile caption: "Living for these golden hour feels!" \n\nShort & sweet: "Sun. Smiles. Repeat."`;
+        return NextResponse.json({ caption: mocked });
+      }
+
       return NextResponse.json(
         { error: 'Server not configured: missing GEMINI_API_KEY' },
         { status: 503 }
