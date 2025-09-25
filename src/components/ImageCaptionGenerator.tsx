@@ -1,5 +1,7 @@
 "use client";
 import React, { useState } from "react";
+import Image from "next/image";
+
 
 interface Caption {
   id: string;
@@ -136,9 +138,8 @@ export default function ImageCaptionGenerator() {
   const copyToClipboard = async (text: string) => {
     try {
       await navigator.clipboard.writeText(text);
-  // show non-blocking toast instead of alert
-  setToast("Caption copied to clipboard!");
-  setTimeout(() => setToast(null), 2200);
+      setToast("Caption copied to clipboard!");
+      setTimeout(() => setToast(null), 2200);
     } catch (err) {
       console.warn("Copy to clipboard failed:", err);
       const fallback = prompt("Copy the caption below:", text);
@@ -187,14 +188,14 @@ export default function ImageCaptionGenerator() {
             <div className="flex flex-col lg:flex-row">
               <div className="lg:w-1/2 h-64 lg:h-auto">
                 <div className="relative h-full">
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img src={item.image} alt="Uploaded" className="img-portrait w-full" />
+                  
+                  <Image src={item.image} alt="Uploaded" className="img-portrait w-full" unoptimized fill sizes="(max-width: 768px) 100vw, 50vw" />
                 </div>
               </div>
               <div className="lg:w-1/2 p-6 flex flex-col justify-between">
                 <div>
                   <div className="flex justify-between items-start mb-4">
-                    <h3 className="text-lg font-semibold text-gray-800">Generated Caption</h3>
+                    <h3 className="text-lg font-semibold text-gray-800 lg:mb-0 mb-4">Generated Caption</h3>
                     <span className="timestamp">{item.timestamp.toLocaleString()}</span>
                   </div>
 
@@ -218,7 +219,7 @@ export default function ImageCaptionGenerator() {
                 </div>
 
                 <div className="flex gap-3 items-center">
-                  {/* removed bulk copy/share — per-option controls are above */}
+               
                 </div>
               </div>
             </div>
